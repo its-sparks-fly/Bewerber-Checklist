@@ -220,7 +220,7 @@ function checklist_global()
       $query = $db->simple_select("profilefields", "fid, name, length", "fid = '".$field."'");
       $field = $db->fetch_array($query);
       $fid = "fid".$field['fid'];
-      if(!empty($mybb->user[$fid]) || strlen($mybb->user[$fid]) < $field['length']) {
+      if(!empty($mybb->user[$fid]) || strlen($mybb->user[$fid]) > $field['length']) {
         eval("\$checklist_check .= \"".$templates->get("checklist_field_checked")."\";");
       }
       else {
