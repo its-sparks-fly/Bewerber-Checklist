@@ -23,8 +23,6 @@ function checklist_install()
 {
   global $db, $cache, $mybb;
 
-  $db->query("ALTER TABLE `".TABLE_PREFIX."profilefields` ADD `checklist` int(1)  NOT NULL DEFAULT '1';");
-
   $setting_group = array(
     'name' => 'checklist',
     'title' => 'Bewerber-Checklist',
@@ -196,22 +194,15 @@ function checklist_install()
 function checklist_is_installed()
 {
   global $db;
-  if($db->field_exists("checklist", "profilefields"))
-  {
-      return true;
-  }
-  return false;
+    if(isset($mybb->settings['checklist_application'])) {
+        return true;
+    }
+    return false;
 }
 
 function checklist_uninstall()
 {
   global $db;
-
-  if($db->field_exists("checklist", "profilefields"))
-  {
-    $db->drop_column("profilefields", "checklist");
-  }
-
   $db->delete_query('settings', "name IN('checklist_group', 'checklist_fields', 'checklist_application', 'checklist_forum', 'checklist_birthday')");
   $db->delete_query('settinggroups', "name = 'checklist'");
 
