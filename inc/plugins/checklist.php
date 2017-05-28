@@ -3,9 +3,7 @@ if(!defined("IN_MYBB"))
 {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
-
 $plugins->add_hook("global_intermediate", "checklist_global");
-
 function checklist_info()
 {
 	return array(
@@ -18,11 +16,9 @@ function checklist_info()
 		"compatibility" => "18*"
 	);
 }
-
 function checklist_install()
 {
   global $db, $cache, $mybb;
-
   $setting_group = array(
     'name' => 'checklist',
     'title' => 'Bewerber-Checklist',
@@ -31,7 +27,6 @@ function checklist_install()
     'isdefault' => 0
   );
   $gid = $db->insert_query("settinggroups", $setting_group);
-
   $setting_array = array(
     'checklist_group' => array(
     'title' => 'Benutzergruppe für Bewerber',
@@ -69,14 +64,12 @@ function checklist_install()
     'disporder' => 5
     ),
   );
-
   foreach($setting_array as $name => $setting)
   {
     $setting['name'] = $name;
     $setting['gid'] = $gid;
      $db->insert_query('settings', $setting);
   }
-
   $insert_array = array(
     'title'		=> 'checklist',
     'template'	=> $db->escape_string('<center>
@@ -91,7 +84,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_application_checked',
     'template'	=> $db->escape_string('<tr>
@@ -103,7 +95,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_application_unchecked',
     'template'	=> $db->escape_string('<tr>
@@ -115,7 +106,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_avatar_checked',
     'template'	=> $db->escape_string('<tr>
@@ -127,7 +117,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_avatar_unchecked',
     'template'	=> $db->escape_string('<tr>
@@ -139,7 +128,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_birthday_checked',
     'template'	=> $db->escape_string('<tr>
@@ -151,7 +139,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_birthday_unchecked',
     'template'	=> $db->escape_string('<tr>
@@ -163,7 +150,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_field_checked',
     'template'	=> $db->escape_string('<tr>
@@ -175,7 +161,6 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   $insert_array = array(
     'title'		=> 'checklist_field_unchecked',
     'template'	=> $db->escape_string('<tr>
@@ -187,48 +172,36 @@ function checklist_install()
     'dateline'	=> TIME_NOW
   );
   $db->insert_query("templates", $insert_array);
-
   rebuild_settings();
 }
-
 function checklist_is_installed()
 {
-  global $db;
-    if(isset($mybb->settings['checklist_application'])) {
-        return true;
-    }
-    return false;
+  global $db, $mybb;
+	if(isset($mybb->settings['checklist_birthday'])) {
+			return true;
+	}
+	return false;
 }
-
 function checklist_uninstall()
 {
   global $db;
   $db->delete_query('settings', "name IN('checklist_group', 'checklist_fields', 'checklist_application', 'checklist_forum', 'checklist_birthday')");
   $db->delete_query('settinggroups', "name = 'checklist'");
-
     $db->delete_query("templates", "title IN('checklist', 'checklist_application_checked', 'checklist_application_unchecked', 'checklist_avatar_checked', 'checklist_avatar_unchecked', 'checklist_birthday_checked', 'checklist_birthday_unchecked', 'checklist_field_checked', 'checklist_field_unchecked')");
-
   rebuild_settings();
 }
-
 function checklist_activate()
 {
   global $db, $mybb;
-
   include MYBB_ROOT."/inc/adminfunctions_templates.php";
   find_replace_templatesets("header", "#".preg_quote('{$awaitingusers}')."#i", '{$awaitingusers} {$header_checklist}');
-
 }
-
 function checklist_deactivate()
 {
   global $db, $mybb;
-
   include MYBB_ROOT."/inc/adminfunctions_templates.php";
   find_replace_templatesets("header", "#".preg_quote('{$header_checklist}')."#i", '', 0);
-
 }
-
 function checklist_global()
 {
   global $db, $mybb, $lang, $templates, $field, $checklist_check, $header_checklist;
