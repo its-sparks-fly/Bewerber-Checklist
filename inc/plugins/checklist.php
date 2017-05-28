@@ -121,12 +121,13 @@ function checklist_deactivate()
 
 function checklist_global() 
 {
-  global $db, $mybb, $lang, $templates, $header_checklist;
+  global $db, $mybb, $lang, $templates, $field, $checklist_check, $header_checklist;
+  $lang->load('checklist');
   $uid = $mybb->user['uid'];
   if($mybb->usergroup['uid'] == $mybb->settings['checklist_group']) {
     $fields = explode(", ", $db->escape_string($mybb->settings['checklist_fields']));
     foreach($fields as $db->escape_string($field)) {
-      $query = $db->query("SELECT fid, name, length FROM ".TABLE_PREFIX."profilefields WHERE fid = '$field'");
+      $query = $db->simple_select("profilefields", "fid, name, length", "fid = '".$field."'");
       $field = $db->fetch_array($query);
       $fid = "fid".$field['fid'];
       if(empty($mybb->user[$fid]) || strln($mybb->user[$fid] < $field['length']) {
